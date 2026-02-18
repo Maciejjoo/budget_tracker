@@ -59,19 +59,6 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
     super.dispose();
   }
 
-  String _getCategoryLabel(TrackerRecordCategory category) {
-    return switch (category) {
-      TrackerRecordCategory.food => LocaleKeys.categoryFood.tr(),
-      TrackerRecordCategory.transport => LocaleKeys.categoryTransport.tr(),
-      TrackerRecordCategory.entertainment =>
-        LocaleKeys.categoryEntertainment.tr(),
-      TrackerRecordCategory.utilities => LocaleKeys.categoryUtilities.tr(),
-      TrackerRecordCategory.other => LocaleKeys.categoryOther.tr(),
-      TrackerRecordCategory.income => LocaleKeys.categoryIncome.tr(),
-      TrackerRecordCategory.unknown => LocaleKeys.categoryUnknown.tr(),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -138,7 +125,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                     ].map((category) {
                       return DropdownMenuItem(
                         value: category,
-                        child: Text(_getCategoryLabel(category)),
+                        child: Text(category.uiName),
                       );
                     }).toList(),
                 onChanged: (value) {
