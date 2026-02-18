@@ -3,8 +3,8 @@ import 'package:budget_tracker/src/enums/tracker_record_category.dart';
 import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'tracker_record.freezed.dart';
-part 'tracker_record.g.dart';
+part 'tracker_record_entity.freezed.dart';
+part 'tracker_record_entity.g.dart';
 
 @freezed
 sealed class TrackerRecordEntity with _$TrackerRecordEntity {

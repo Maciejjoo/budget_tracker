@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tracker_record.dart';
+part of 'tracker_record_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
