@@ -15,6 +15,7 @@ class TrackerCubit extends SafeCubit<TrackerState> {
   final TrackerRepository _trackerRepository;
   StreamSubscription<DataState<double>>? _balanceSubscription;
   static const int _pageSize = 20;
+  static const int _limitAmount = 1000000;
 
   TrackerCubit(this._trackerRepository) : super(const TrackerState()) {
     watchBalance();
@@ -76,6 +77,10 @@ class TrackerCubit extends SafeCubit<TrackerState> {
   }) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
+    if (amount > _limitAmount) {
+      emit(state.copyWith(isAddingRecordSuccess: false, isAddingRecord: false));
+      return;
+    }
     final result = await _trackerRepository.addExpense(
       amount: amount,
       category: category,
@@ -106,6 +111,10 @@ class TrackerCubit extends SafeCubit<TrackerState> {
   Future<void> addIncome({required double amount, String? note}) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
+    if (amount > _limitAmount) {
+      emit(state.copyWith(isAddingRecordSuccess: false, isAddingRecord: false));
+      return;
+    }
     final result = await _trackerRepository.addIncome(
       amount: amount,
       note: note,
