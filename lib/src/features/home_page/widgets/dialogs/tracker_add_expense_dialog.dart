@@ -90,7 +90,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                   decimal: true,
                 ),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(r'^\d*\.?\d{0,2}'),
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
