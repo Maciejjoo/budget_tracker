@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.add_chart_rounded),
+                  icon: const Icon(Icons.bar_chart_rounded),
                   onPressed: () {
                     TrackerCategoryChart.show(context);
                   },

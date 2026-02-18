@@ -4,7 +4,7 @@ A simple example of a Budget Tracker app.
 
 ## Time-to-build
 
-Whole project took 3h of coding and around 20mins of tightening up GitHub, creating this README etc.
+Whole project took 3h of coding, 20mins of testing and tweaking and around 20mins of tightening up GitHub, creating this README etc.
 
 I've used Coopilot while creating this app - mainly on UI part to save some time.
 
@@ -37,11 +37,29 @@ I didn’t make major trade-offs, although the UI/UX was put together quickly.
 
 ## Possible improvements
 
-I would improve the UI/UX and add the ability to edit records. Additionally, I would organize the UI layer in the code a bit better. Using go_router would be beneficial for a more scalable app, although it wasn’t necessary at this stage. Writing tests would also be on the list, but for now I don’t consider them essential.
+I would improve the UI/UX and add the ability to edit records. Additionally, I would organize the UI layer in the code a bit better. Using go_router would be beneficial for a more scalable app, although it wasn't necessary at this stage. Writing tests would also be on the list, but for now I don't consider them essential.
 
 ## Starting the app
 
 App was built and tested using Flutter 3.41.1
+
+1. Install dependencies:
+
+   ```bash
+   flutter pub get
+   ```
+
+2. Generate required code (Drift, Freezed, i18n):
+
+   ```bash
+   dart run build_runner build --delete-conflicting-outputs
+   ```
+
+3. Run the app:
+
+   ```bash
+   flutter run
+   ```
 
 ## Generating locales
 
