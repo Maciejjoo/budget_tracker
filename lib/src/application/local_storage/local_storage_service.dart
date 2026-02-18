@@ -1,3 +1,5 @@
+import 'package:budget_tracker/src/enums/tracker_record_category.dart';
+import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
@@ -51,6 +53,12 @@ class LocalStorageService {
         );
   }
 
+  Future<void> deleteRecord(int id) async {
+    await (_localStorage.delete(
+      _localStorage.trackerRecords,
+    )..where((tbl) => tbl.id.equals(id))).go();
+  }
+
   Future<TrackerRecord> insertRecord({
     required DateTime date,
     required int amount,
@@ -78,13 +86,20 @@ class LocalStorageService {
   }
 
   Future<List<TrackerRecord>> getRecords({
-    String? category,
+    TrackerRecordType? type,
     int? limit,
     int? offset,
   }) async {
     final query = _localStorage.select(_localStorage.trackerRecords);
-    if (category != null) {
-      query.where((tbl) => tbl.category.equals(category));
+    if (type != null) {
+      switch (type) {
+        case TrackerRecordType.income:
+          query.where((tbl) => tbl.amount.isBiggerThanValue(0));
+          break;
+        case TrackerRecordType.expense:
+          query.where((tbl) => tbl.amount.isSmallerThanValue(0));
+          break;
+      }
     }
     if (limit != null || offset != null) {
       query.limit(limit ?? -1, offset: offset);
@@ -104,5 +119,28 @@ class LocalStorageService {
           ),
         )
         .toList();
+  }
+
+  Future<List<(TrackerRecordCategory, int)>>
+  getCategoriesWithTotalAmount() async {
+    final categoryCol = _localStorage.trackerRecords.category;
+    final amountSum = _localStorage.trackerRecords.amount.sum();
+
+    final query = _localStorage.selectOnly(_localStorage.trackerRecords)
+      ..addColumns([categoryCol, amountSum])
+      ..groupBy([categoryCol]);
+
+    final results = await query.get();
+
+    return results.map((row) {
+      final categoryString = row.read(categoryCol);
+      final category = categoryString != null
+          ? TrackerRecordCategory.values.firstWhere(
+              (e) => e.name == categoryString,
+              orElse: () => TrackerRecordCategory.other,
+            )
+          : TrackerRecordCategory.other;
+      return (category, row.read(amountSum) ?? 0);
+    }).toList();
   }
 }

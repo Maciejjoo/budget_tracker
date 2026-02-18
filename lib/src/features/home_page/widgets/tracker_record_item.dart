@@ -1,13 +1,15 @@
 import 'package:budget_tracker/generated/locale_keys.g.dart';
 import 'package:budget_tracker/src/domain/tracker_record.dart';
 import 'package:budget_tracker/src/enums/tracker_record_type.dart';
+import 'package:budget_tracker/src/utils/ui/dimensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class TrackerRecordItem extends StatelessWidget {
   final TrackerRecordEntity record;
+  final VoidCallback? onDelete;
 
-  const TrackerRecordItem({required this.record, super.key});
+  const TrackerRecordItem({required this.record, this.onDelete, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,38 +19,61 @@ class TrackerRecordItem extends StatelessWidget {
     final amountColor = isIncome ? Colors.green : theme.colorScheme.error;
     final amountPrefix = isIncome ? '+' : '-';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: colorScheme.surface,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: isIncome
-              ? Colors.green.withValues(alpha: 0.2)
-              : theme.colorScheme.error.withValues(alpha: 0.2),
-          child: Icon(
-            isIncome ? Icons.arrow_upward : Icons.arrow_downward,
-            color: amountColor,
-          ),
+    return Dismissible(
+      key: Key('tracker_record_${record.id}'),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: Dimensions.largePadding),
+        margin: const EdgeInsets.symmetric(
+          horizontal: Dimensions.largePadding,
+          vertical: Dimensions.mediumPadding,
         ),
-        title: Text(
-          record.category?.name.toUpperCase() ?? LocaleKeys.unknown.tr(),
-          style: theme.textTheme.labelMedium,
+        decoration: BoxDecoration(
+          color: colorScheme.error,
+          borderRadius: BorderRadius.circular(12),
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (record.description != null)
-              Text(record.description!, style: theme.textTheme.bodySmall),
-            const SizedBox(height: 4),
-            Text(
-              DateFormat('MMM dd, yyyy HH:mm').format(record.date),
-              style: theme.textTheme.bodySmall,
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      onDismissed: (_) {
+        onDelete?.call();
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(
+          horizontal: Dimensions.largePadding,
+          vertical: Dimensions.mediumPadding,
+        ),
+        color: colorScheme.surface,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: isIncome
+                ? Colors.green.withValues(alpha: 0.2)
+                : theme.colorScheme.error.withValues(alpha: 0.2),
+            child: Icon(
+              isIncome ? Icons.arrow_upward : Icons.arrow_downward,
+              color: amountColor,
             ),
-          ],
-        ),
-        trailing: Text(
-          '$amountPrefix\$${record.amount.abs().toStringAsFixed(2)}',
-          style: theme.textTheme.bodyMedium?.copyWith(color: amountColor),
+          ),
+          title: Text(
+            record.category?.name.toUpperCase() ?? LocaleKeys.unknown.tr(),
+            style: theme.textTheme.labelMedium,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (record.description != null)
+                Text(record.description!, style: theme.textTheme.bodySmall),
+              const SizedBox(height: Dimensions.smallPadding),
+              Text(
+                DateFormat('MMM dd, yyyy HH:mm').format(record.date),
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
+          ),
+          trailing: Text(
+            '$amountPrefix\$${record.amount.abs().toStringAsFixed(2)}',
+            style: theme.textTheme.bodyMedium?.copyWith(color: amountColor),
+          ),
         ),
       ),
     );

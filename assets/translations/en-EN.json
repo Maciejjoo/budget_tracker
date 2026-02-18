@@ -24,5 +24,12 @@
     "categoryUtilities": "Utilities",
     "categoryOther": "Other",
     "categoryIncome": "Income",
-    "categoryUnknown": "Unknown"
+    "categoryUnknown": "Unknown",
+    "note": "Note",
+    "enterNote": "Enter note (optional)",
+    "recordDeletedSuccessfully": "Record deleted successfully",
+    "failedToDeleteRecord": "Failed to delete record",
+    "viewPieChart": "View pie chart",
+    "spendingByCategory": "Spending by Category",
+    "noExpenseDataAvailable": "No expense data available"
 }

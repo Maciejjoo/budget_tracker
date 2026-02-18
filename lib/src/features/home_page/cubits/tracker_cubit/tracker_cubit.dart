@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:budget_tracker/src/data/tracker_repository.dart';
 import 'package:budget_tracker/src/domain/tracker_record.dart';
+import 'package:budget_tracker/src/enums/tracker_record_category.dart';
+import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:budget_tracker/src/utils/cubit/safe_cubit.dart';
 import 'package:budget_tracker/src/utils/data_state/data_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,6 +18,11 @@ class TrackerCubit extends SafeCubit<TrackerState> {
 
   TrackerCubit(this._trackerRepository) : super(const TrackerState()) {
     watchBalance();
+    loadRecords();
+  }
+
+  void selectFilterType(TrackerRecordType? type) {
+    emit(state.copyWith(selectedType: type));
     loadRecords();
   }
 
@@ -34,20 +41,51 @@ class TrackerCubit extends SafeCubit<TrackerState> {
     });
   }
 
+  Future<void> deleteRecord(int recordId) async {
+    emit(state.copyWith(isRemovingRecordSuccess: null));
+    // Optimistically update the UI
+    final currentRecords = List<TrackerRecordEntity>.from(state.records);
+    final recordIndex = currentRecords.indexWhere((r) => r.id == recordId);
+    if (recordIndex == -1) return; // Record not found, do nothing
+
+    final removedRecord = currentRecords.removeAt(recordIndex);
+    emit(state.copyWith(records: currentRecords));
+
+    final result = await _trackerRepository.deleteRecord(recordId);
+    result.handle(
+      success: (_) {
+        emit(state.copyWith(isRemovingRecordSuccess: true));
+      },
+      failure: (failure) {
+        // Revert the optimistic update
+        currentRecords.insert(recordIndex, removedRecord);
+        emit(
+          state.copyWith(
+            records: currentRecords,
+            isRemovingRecordSuccess: false,
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> addExpense({
     required double amount,
     required String category,
+    String? note,
   }) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
     final result = await _trackerRepository.addExpense(
       amount: amount,
       category: category,
+      note: note,
     );
     result.handle(
       success: (record) {
         final currentRecords = List<TrackerRecordEntity>.from(state.records);
-        currentRecords.insert(0, record); // Add new record at the beginning
+        // Add new record at the beginning
+        currentRecords.insert(0, record);
         emit(
           state.copyWith(
             records: currentRecords,
@@ -65,15 +103,18 @@ class TrackerCubit extends SafeCubit<TrackerState> {
     );
   }
 
-  Future<void> addIncome({required double amount}) async {
+  Future<void> addIncome({required double amount, String? note}) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
-    final result = await _trackerRepository.addIncome(amount: amount);
-    print('addIncome result: $result');
+    final result = await _trackerRepository.addIncome(
+      amount: amount,
+      note: note,
+    );
     result.handle(
       success: (record) {
         final currentRecords = List<TrackerRecordEntity>.from(state.records);
-        currentRecords.insert(0, record); // Add new record at the beginning
+        // Add new record at the beginning
+        currentRecords.insert(0, record);
 
         emit(
           state.copyWith(
@@ -101,8 +142,8 @@ class TrackerCubit extends SafeCubit<TrackerState> {
     final result = await _trackerRepository.getRecords(
       limit: _pageSize,
       offset: offset,
+      type: state.selectedType,
     );
-
     result.handle(
       success: (newRecords) {
         final updatedRecords = loadMore
@@ -119,6 +160,28 @@ class TrackerCubit extends SafeCubit<TrackerState> {
       },
       failure: (failure) {
         emit(state.copyWith(isLoadingRecords: false));
+      },
+    );
+  }
+
+  Future<void> getChartData() async {
+    if (state.isLoadingChartData) return;
+
+    emit(state.copyWith(isLoadingChartData: true));
+
+    final result = await _trackerRepository.getCategoriesWithTotalAmount();
+    print('Chart data result: $result');
+    result.handle(
+      success: (data) {
+        emit(
+          state.copyWith(
+            categoriesWithTotalAmount: data,
+            isLoadingChartData: false,
+          ),
+        );
+      },
+      failure: (failure) {
+        emit(state.copyWith(isLoadingChartData: false));
       },
     );
   }

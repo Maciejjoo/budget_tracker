@@ -1,6 +1,8 @@
 import 'package:budget_tracker/generated/locale_keys.g.dart';
 import 'package:budget_tracker/src/enums/tracker_record_category.dart';
 import 'package:budget_tracker/src/features/home_page/cubits/tracker_cubit/tracker_cubit.dart';
+import 'package:budget_tracker/src/utils/ui/app_snackbar.dart';
+import 'package:budget_tracker/src/utils/ui/dimensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,19 +14,25 @@ class TrackerAddExpenseDialog extends StatefulWidget {
   static void show(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => BlocListener<TrackerCubit, TrackerState>(
+      builder: (_) => BlocListener<TrackerCubit, TrackerState>(
         listenWhen: (p, c) {
           return p.isAddingRecord != c.isAddingRecord ||
               p.isAddingRecordSuccess != c.isAddingRecordSuccess;
         },
         listener: (context, state) {
           if (state.isAddingRecordSuccess == true) {
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
             return;
           }
           if (state.isAddingRecordSuccess == false) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(LocaleKeys.failedToAddRecord.tr())),
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+            AppSnackbar.instance.showError(
+              context,
+              message: LocaleKeys.failedToAddRecord.tr(),
             );
           }
         },
@@ -41,11 +49,13 @@ class TrackerAddExpenseDialog extends StatefulWidget {
 class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
+  final _noteController = TextEditingController();
   TrackerRecordCategory? _selectedCategory;
 
   @override
   void dispose() {
     _amountController.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 
@@ -69,7 +79,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
 
     return Dialog(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(Dimensions.veryLargePadding),
         child: Form(
           key: _formKey,
           child: Column(
@@ -80,7 +90,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                 LocaleKeys.addExpense.tr(),
                 style: theme.textTheme.labelLarge,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimensions.extraLargePadding),
               TextFormField(
                 controller: _amountController,
                 decoration: InputDecoration(
@@ -110,7 +120,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                 },
                 autofocus: true,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimensions.largePadding),
               DropdownButtonFormField<TrackerRecordCategory>(
                 initialValue: _selectedCategory,
                 decoration: InputDecoration(
@@ -143,7 +153,18 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: Dimensions.largePadding),
+              TextFormField(
+                controller: _noteController,
+                decoration: InputDecoration(
+                  labelText: LocaleKeys.note.tr(),
+                  border: const OutlineInputBorder(),
+                  hintText: LocaleKeys.enterNote.tr(),
+                ),
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+              ),
+              const SizedBox(height: Dimensions.extraLargePadding),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -151,7 +172,7 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(LocaleKeys.cancel.tr()),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: Dimensions.mediumPadding),
                   BlocBuilder<TrackerCubit, TrackerState>(
                     buildWhen: (p, c) {
                       return p.isAddingRecord != c.isAddingRecord;
@@ -166,9 +187,14 @@ class _TrackerAddExpenseDialogState extends State<TrackerAddExpenseDialog> {
                                   final amount = double.parse(
                                     _amountController.text,
                                   );
+                                  final note =
+                                      _noteController.text.trim().isEmpty
+                                      ? null
+                                      : _noteController.text.trim();
                                   trackerCubit.addExpense(
                                     amount: amount,
                                     category: _selectedCategory!.name,
+                                    note: note,
                                   );
                                 }
                               },

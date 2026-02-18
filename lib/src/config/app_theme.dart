@@ -15,6 +15,14 @@ class AppTheme {
   static const _darkSurfaceColor = Color(0xFF1C1B1F);
   static const _darkErrorColor = Color(0xFFF2B8B5);
 
+  // Snackbar Colors
+  static const _successColor = Color(0xFF4CAF50);
+  static const _errorSnackbarColor = Color(0xFFD32F2F);
+
+  // Public getters for snackbar colors
+  static Color get successColor => _successColor;
+  static Color get errorColor => _errorSnackbarColor;
+
   // Light Theme
   static ThemeData get lightTheme {
     return ThemeData(
@@ -68,6 +76,18 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: _lightPrimaryColor,
         foregroundColor: Colors.white,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: const Color(0xFF323232),
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        behavior: SnackBarBehavior.fixed,
+        elevation: 6,
+        actionTextColor: _lightPrimaryColor,
       ),
     );
   }
@@ -125,6 +145,18 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: _darkPrimaryColor,
         foregroundColor: Color(0xFF381E72),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: const Color(0xFF3A3A3A),
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        behavior: SnackBarBehavior.fixed,
+        elevation: 6,
+        actionTextColor: _darkPrimaryColor,
       ),
     );
   }

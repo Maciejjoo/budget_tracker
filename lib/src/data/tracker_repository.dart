@@ -2,22 +2,32 @@
 import 'package:budget_tracker/src/application/local_storage/local_storage_service.dart';
 import 'package:budget_tracker/src/domain/tracker_record.dart';
 import 'package:budget_tracker/src/enums/tracker_record_category.dart';
+import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:budget_tracker/src/utils/data_state/data_state.dart';
 
 abstract class TrackerRepository {
   Future<DataState<TrackerRecordEntity>> addExpense({
     required double amount,
     String? category,
+    String? note,
   });
-  Future<DataState<TrackerRecordEntity>> addIncome({required double amount});
+  Future<DataState<TrackerRecordEntity>> addIncome({
+    required double amount,
+    String? note,
+  });
 
   Future<DataState<List<TrackerRecordEntity>>> getRecords({
-    TrackerRecordCategory? category,
+    TrackerRecordType? type,
     int? limit,
     int? offset,
   });
 
+  Future<DataState<void>> deleteRecord(int id);
+
   Stream<DataState<double>> watchBalance();
+
+  Future<DataState<List<(TrackerRecordCategory, int)>>>
+  getCategoriesWithTotalAmount();
 }
 
 class TrackerRepositoryImpl implements TrackerRepository {
@@ -27,6 +37,7 @@ class TrackerRepositoryImpl implements TrackerRepository {
   @override
   Future<DataState<TrackerRecordEntity>> addExpense({
     required double amount,
+    String? note,
     String? category,
   }) async {
     try {
@@ -36,6 +47,7 @@ class TrackerRepositoryImpl implements TrackerRepository {
         date: DateTime.now(),
         amount: -amountInCents,
         category: category,
+        description: note,
       );
 
       return DataState.success(
@@ -49,6 +61,7 @@ class TrackerRepositoryImpl implements TrackerRepository {
   @override
   Future<DataState<TrackerRecordEntity>> addIncome({
     required double amount,
+    String? note,
   }) async {
     try {
       // Convert amount to cents to avoid floating point issues
@@ -57,6 +70,7 @@ class TrackerRepositoryImpl implements TrackerRepository {
         date: DateTime.now(),
         amount: amountInCents,
         category: TrackerRecordCategory.income.name,
+        description: note,
       );
 
       return DataState.success(
@@ -69,15 +83,15 @@ class TrackerRepositoryImpl implements TrackerRepository {
 
   @override
   Future<DataState<List<TrackerRecordEntity>>> getRecords({
-    TrackerRecordCategory? category,
+    TrackerRecordType? type,
     int? limit,
     int? offset,
   }) async {
     try {
       final records = await _localStorageService.getRecords(
-        category: category?.name,
         limit: limit,
         offset: offset,
+        type: type,
       );
 
       final entities = records
@@ -85,6 +99,27 @@ class TrackerRepositoryImpl implements TrackerRepository {
           .toList();
 
       return DataState.success(data: entities);
+    } catch (_) {
+      return const DataState.failure(Failure.badResponse());
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteRecord(int id) async {
+    try {
+      await _localStorageService.deleteRecord(id);
+      return const DataState.success(data: null);
+    } catch (_) {
+      return const DataState.failure(Failure.badResponse());
+    }
+  }
+
+  @override
+  Future<DataState<List<(TrackerRecordCategory, int)>>>
+  getCategoriesWithTotalAmount() async {
+    try {
+      final data = await _localStorageService.getCategoriesWithTotalAmount();
+      return DataState.success(data: data);
     } catch (_) {
       return const DataState.failure(Failure.badResponse());
     }

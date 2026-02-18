@@ -29,5 +29,12 @@ abstract class  LocaleKeys {
   static const categoryOther = 'categoryOther';
   static const categoryIncome = 'categoryIncome';
   static const categoryUnknown = 'categoryUnknown';
+  static const note = 'note';
+  static const enterNote = 'enterNote';
+  static const recordDeletedSuccessfully = 'recordDeletedSuccessfully';
+  static const failedToDeleteRecord = 'failedToDeleteRecord';
+  static const viewPieChart = 'viewPieChart';
+  static const spendingByCategory = 'spendingByCategory';
+  static const noExpenseDataAvailable = 'noExpenseDataAvailable';
 
 }
