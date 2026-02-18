@@ -39,6 +39,10 @@ I didn’t make major trade-offs, although the UI/UX was put together quickly.
 
 I would improve the UI/UX and add the ability to edit records. Additionally, I would organize the UI layer in the code a bit better. Using go_router would be beneficial for a more scalable app, although it wasn’t necessary at this stage. Writing tests would also be on the list, but for now I don’t consider them essential.
 
+## Starting the app
+
+App was built and tested using Flutter 3.41.1
+
 ## Generating locales
 
 flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir ./assets/translations

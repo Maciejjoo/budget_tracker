@@ -170,7 +170,6 @@ class TrackerCubit extends SafeCubit<TrackerState> {
     emit(state.copyWith(isLoadingChartData: true));
 
     final result = await _trackerRepository.getCategoriesWithTotalAmount();
-    print('Chart data result: $result');
     result.handle(
       success: (data) {
         emit(
@@ -181,7 +180,12 @@ class TrackerCubit extends SafeCubit<TrackerState> {
         );
       },
       failure: (failure) {
-        emit(state.copyWith(isLoadingChartData: false));
+        emit(
+          state.copyWith(
+            isLoadingChartData: false,
+            categoriesWithTotalAmount: [],
+          ),
+        );
       },
     );
   }

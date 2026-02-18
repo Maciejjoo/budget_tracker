@@ -87,7 +87,7 @@ class _TrackerAddBalanceDialogState extends State<TrackerAddBalanceDialog> {
                   decimal: true,
                 ),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                  FilteringTextInputFormatter.allow(r'^\d*\.?\d{0,2}'),
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
