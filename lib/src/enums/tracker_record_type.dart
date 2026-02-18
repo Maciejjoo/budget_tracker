@@ -1,0 +1,1 @@
+enum TrackerRecordType { income, expense }

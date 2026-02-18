@@ -1,0 +1,7 @@
+# budget_tracker
+
+A new Flutter project.
+
+# Generating locales
+
+flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir ./assets/translations
