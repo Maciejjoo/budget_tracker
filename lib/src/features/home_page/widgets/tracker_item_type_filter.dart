@@ -1,6 +1,8 @@
+import 'package:budget_tracker/generated/locale_keys.g.dart';
 import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:budget_tracker/src/features/home_page/cubits/tracker_cubit/tracker_cubit.dart';
 import 'package:budget_tracker/src/utils/ui/dimensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +21,7 @@ class TrackerItemTypeFilter extends StatelessWidget {
           child: Row(
             children: [
               _FilterPill(
-                label: 'All',
+                label: LocaleKeys.filterAll.tr(),
                 isSelected: state.selectedType == null,
                 onTap: () {
                   context.read<TrackerCubit>().selectFilterType(null);
@@ -27,7 +29,7 @@ class TrackerItemTypeFilter extends StatelessWidget {
               ),
               const SizedBox(width: Dimensions.mediumPadding),
               _FilterPill(
-                label: 'Income',
+                label: LocaleKeys.filterIncome.tr(),
                 isSelected: state.selectedType == TrackerRecordType.income,
                 onTap: () {
                   context.read<TrackerCubit>().selectFilterType(
@@ -37,7 +39,7 @@ class TrackerItemTypeFilter extends StatelessWidget {
               ),
               const SizedBox(width: Dimensions.mediumPadding),
               _FilterPill(
-                label: 'Expense',
+                label: LocaleKeys.filterExpense.tr(),
                 isSelected: state.selectedType == TrackerRecordType.expense,
                 onTap: () {
                   context.read<TrackerCubit>().selectFilterType(

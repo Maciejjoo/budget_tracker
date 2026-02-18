@@ -36,5 +36,8 @@ abstract class  LocaleKeys {
   static const viewPieChart = 'viewPieChart';
   static const spendingByCategory = 'spendingByCategory';
   static const noExpenseDataAvailable = 'noExpenseDataAvailable';
+  static const filterAll = 'filterAll';
+  static const filterIncome = 'filterIncome';
+  static const filterExpense = 'filterExpense';
 
 }

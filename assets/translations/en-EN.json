@@ -31,5 +31,8 @@
     "failedToDeleteRecord": "Failed to delete record",
     "viewPieChart": "View pie chart",
     "spendingByCategory": "Spending by Category",
-    "noExpenseDataAvailable": "No expense data available"
+    "noExpenseDataAvailable": "No expense data available",
+    "filterAll": "All",
+    "filterIncome": "Income",
+    "filterExpense": "Expense"
 }
