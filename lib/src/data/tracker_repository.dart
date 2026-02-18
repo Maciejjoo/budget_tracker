@@ -5,16 +5,11 @@ import 'package:budget_tracker/src/enums/tracker_record_category.dart';
 import 'package:budget_tracker/src/utils/data_state/data_state.dart';
 
 abstract class TrackerRepository {
-  Future<DataState<TrackerRecordEntity>> addExpense(
-    double amount,
-    String category,
-    DateTime date,
-  );
-  Future<DataState<TrackerRecordEntity>> addIncome(
-    double amount,
-    String category,
-    DateTime date,
-  );
+  Future<DataState<TrackerRecordEntity>> addExpense({
+    required double amount,
+    String? category,
+  });
+  Future<DataState<TrackerRecordEntity>> addIncome({required double amount});
 
   Future<DataState<List<TrackerRecordEntity>>> getRecords({
     TrackerRecordCategory? category,
@@ -30,16 +25,15 @@ class TrackerRepositoryImpl implements TrackerRepository {
   TrackerRepositoryImpl(this._localStorageService);
 
   @override
-  Future<DataState<TrackerRecordEntity>> addExpense(
-    double amount,
-    String category,
-    DateTime date,
-  ) async {
+  Future<DataState<TrackerRecordEntity>> addExpense({
+    required double amount,
+    String? category,
+  }) async {
     try {
       // Convert amount to cents to avoid floating point issues
       final amountInCents = (amount * 100).round();
       final record = await _localStorageService.insertRecord(
-        date: date,
+        date: DateTime.now(),
         amount: -amountInCents,
         category: category,
       );
@@ -53,18 +47,16 @@ class TrackerRepositoryImpl implements TrackerRepository {
   }
 
   @override
-  Future<DataState<TrackerRecordEntity>> addIncome(
-    double amount,
-    String category,
-    DateTime date,
-  ) async {
+  Future<DataState<TrackerRecordEntity>> addIncome({
+    required double amount,
+  }) async {
     try {
       // Convert amount to cents to avoid floating point issues
       final amountInCents = (amount * 100).round();
       final record = await _localStorageService.insertRecord(
-        date: date,
+        date: DateTime.now(),
         amount: amountInCents,
-        category: category,
+        category: TrackerRecordCategory.income.name,
       );
 
       return DataState.success(

@@ -4,5 +4,6 @@ enum TrackerRecordCategory {
   entertainment,
   utilities,
   other,
+  income,
   unknown,
 }

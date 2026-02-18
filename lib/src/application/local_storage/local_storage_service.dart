@@ -73,6 +73,7 @@ class LocalStorageService {
     query.orderBy([
       (tbl) => OrderingTerm(expression: tbl.id, mode: OrderingMode.desc),
     ]);
+    query.limit(1);
     return await query.getSingle();
   }
 
@@ -88,6 +89,9 @@ class LocalStorageService {
     if (limit != null || offset != null) {
       query.limit(limit ?? -1, offset: offset);
     }
+    query.orderBy([
+      (tbl) => OrderingTerm(expression: tbl.date, mode: OrderingMode.desc),
+    ]);
     final records = await query.get();
     return records
         .map(

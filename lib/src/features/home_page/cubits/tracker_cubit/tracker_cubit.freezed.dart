@@ -12,40 +12,42 @@ part of 'tracker_cubit.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$TrackerCubitState {
+mixin _$TrackerState {
 
- List<TrackerRecordEntity> get records; double get balance; bool? get isBalanceSuccess; bool? get isAddingRecordSuccess; bool get isAddingRecord;
-/// Create a copy of TrackerCubitState
+ List<TrackerRecordEntity> get records; double get balance;// Success/failure tracking
+ bool? get isBalanceSuccess; bool? get isAddingRecordSuccess;// Loading states
+ bool get isAddingRecord; bool get isLoadingRecords; bool get hasMoreRecords;
+/// Create a copy of TrackerState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$TrackerCubitStateCopyWith<TrackerCubitState> get copyWith => _$TrackerCubitStateCopyWithImpl<TrackerCubitState>(this as TrackerCubitState, _$identity);
+$TrackerStateCopyWith<TrackerState> get copyWith => _$TrackerStateCopyWithImpl<TrackerState>(this as TrackerState, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackerCubitState&&const DeepCollectionEquality().equals(other.records, records)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isBalanceSuccess, isBalanceSuccess) || other.isBalanceSuccess == isBalanceSuccess)&&(identical(other.isAddingRecordSuccess, isAddingRecordSuccess) || other.isAddingRecordSuccess == isAddingRecordSuccess)&&(identical(other.isAddingRecord, isAddingRecord) || other.isAddingRecord == isAddingRecord));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackerState&&const DeepCollectionEquality().equals(other.records, records)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isBalanceSuccess, isBalanceSuccess) || other.isBalanceSuccess == isBalanceSuccess)&&(identical(other.isAddingRecordSuccess, isAddingRecordSuccess) || other.isAddingRecordSuccess == isAddingRecordSuccess)&&(identical(other.isAddingRecord, isAddingRecord) || other.isAddingRecord == isAddingRecord)&&(identical(other.isLoadingRecords, isLoadingRecords) || other.isLoadingRecords == isLoadingRecords)&&(identical(other.hasMoreRecords, hasMoreRecords) || other.hasMoreRecords == hasMoreRecords));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(records),balance,isBalanceSuccess,isAddingRecordSuccess,isAddingRecord);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(records),balance,isBalanceSuccess,isAddingRecordSuccess,isAddingRecord,isLoadingRecords,hasMoreRecords);
 
 @override
 String toString() {
-  return 'TrackerCubitState(records: $records, balance: $balance, isBalanceSuccess: $isBalanceSuccess, isAddingRecordSuccess: $isAddingRecordSuccess, isAddingRecord: $isAddingRecord)';
+  return 'TrackerState(records: $records, balance: $balance, isBalanceSuccess: $isBalanceSuccess, isAddingRecordSuccess: $isAddingRecordSuccess, isAddingRecord: $isAddingRecord, isLoadingRecords: $isLoadingRecords, hasMoreRecords: $hasMoreRecords)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $TrackerCubitStateCopyWith<$Res>  {
-  factory $TrackerCubitStateCopyWith(TrackerCubitState value, $Res Function(TrackerCubitState) _then) = _$TrackerCubitStateCopyWithImpl;
+abstract mixin class $TrackerStateCopyWith<$Res>  {
+  factory $TrackerStateCopyWith(TrackerState value, $Res Function(TrackerState) _then) = _$TrackerStateCopyWithImpl;
 @useResult
 $Res call({
- List<TrackerRecordEntity> records, double balance, bool? isBalanceSuccess, bool? isAddingRecordSuccess, bool isAddingRecord
+ List<TrackerRecordEntity> records, double balance, bool? isBalanceSuccess, bool? isAddingRecordSuccess, bool isAddingRecord, bool isLoadingRecords, bool hasMoreRecords
 });
 
 
@@ -53,22 +55,24 @@ $Res call({
 
 }
 /// @nodoc
-class _$TrackerCubitStateCopyWithImpl<$Res>
-    implements $TrackerCubitStateCopyWith<$Res> {
-  _$TrackerCubitStateCopyWithImpl(this._self, this._then);
+class _$TrackerStateCopyWithImpl<$Res>
+    implements $TrackerStateCopyWith<$Res> {
+  _$TrackerStateCopyWithImpl(this._self, this._then);
 
-  final TrackerCubitState _self;
-  final $Res Function(TrackerCubitState) _then;
+  final TrackerState _self;
+  final $Res Function(TrackerState) _then;
 
-/// Create a copy of TrackerCubitState
+/// Create a copy of TrackerState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? records = null,Object? balance = null,Object? isBalanceSuccess = freezed,Object? isAddingRecordSuccess = freezed,Object? isAddingRecord = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? records = null,Object? balance = null,Object? isBalanceSuccess = freezed,Object? isAddingRecordSuccess = freezed,Object? isAddingRecord = null,Object? isLoadingRecords = null,Object? hasMoreRecords = null,}) {
   return _then(_self.copyWith(
 records: null == records ? _self.records : records // ignore: cast_nullable_to_non_nullable
 as List<TrackerRecordEntity>,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
 as double,isBalanceSuccess: freezed == isBalanceSuccess ? _self.isBalanceSuccess : isBalanceSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,isAddingRecordSuccess: freezed == isAddingRecordSuccess ? _self.isAddingRecordSuccess : isAddingRecordSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,isAddingRecord: null == isAddingRecord ? _self.isAddingRecord : isAddingRecord // ignore: cast_nullable_to_non_nullable
+as bool,isLoadingRecords: null == isLoadingRecords ? _self.isLoadingRecords : isLoadingRecords // ignore: cast_nullable_to_non_nullable
+as bool,hasMoreRecords: null == hasMoreRecords ? _self.hasMoreRecords : hasMoreRecords // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -76,8 +80,8 @@ as bool,
 }
 
 
-/// Adds pattern-matching-related methods to [TrackerCubitState].
-extension TrackerCubitStatePatterns on TrackerCubitState {
+/// Adds pattern-matching-related methods to [TrackerState].
+extension TrackerStatePatterns on TrackerState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -90,10 +94,10 @@ extension TrackerCubitStatePatterns on TrackerCubitState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TrackerCubitState value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TrackerState value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _TrackerCubitState() when $default != null:
+case _TrackerState() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -112,10 +116,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TrackerCubitState value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TrackerState value)  $default,){
 final _that = this;
 switch (_that) {
-case _TrackerCubitState():
+case _TrackerState():
 return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -130,10 +134,10 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TrackerCubitState value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TrackerState value)?  $default,){
 final _that = this;
 switch (_that) {
-case _TrackerCubitState() when $default != null:
+case _TrackerState() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -151,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord,  bool isLoadingRecords,  bool hasMoreRecords)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _TrackerCubitState() when $default != null:
-return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord);case _:
+case _TrackerState() when $default != null:
+return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord,_that.isLoadingRecords,_that.hasMoreRecords);case _:
   return orElse();
 
 }
@@ -172,10 +176,10 @@ return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddin
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord,  bool isLoadingRecords,  bool hasMoreRecords)  $default,) {final _that = this;
 switch (_that) {
-case _TrackerCubitState():
-return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord);}
+case _TrackerState():
+return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord,_that.isLoadingRecords,_that.hasMoreRecords);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -189,10 +193,10 @@ return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddin
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TrackerRecordEntity> records,  double balance,  bool? isBalanceSuccess,  bool? isAddingRecordSuccess,  bool isAddingRecord,  bool isLoadingRecords,  bool hasMoreRecords)?  $default,) {final _that = this;
 switch (_that) {
-case _TrackerCubitState() when $default != null:
-return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord);case _:
+case _TrackerState() when $default != null:
+return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddingRecordSuccess,_that.isAddingRecord,_that.isLoadingRecords,_that.hasMoreRecords);case _:
   return null;
 
 }
@@ -203,8 +207,8 @@ return $default(_that.records,_that.balance,_that.isBalanceSuccess,_that.isAddin
 /// @nodoc
 
 
-class _TrackerCubitState implements TrackerCubitState {
-  const _TrackerCubitState({final  List<TrackerRecordEntity> records = const [], this.balance = 0, this.isBalanceSuccess, this.isAddingRecordSuccess, this.isAddingRecord = false}): _records = records;
+class _TrackerState implements TrackerState {
+  const _TrackerState({final  List<TrackerRecordEntity> records = const [], this.balance = 0, this.isBalanceSuccess, this.isAddingRecordSuccess, this.isAddingRecord = false, this.isLoadingRecords = false, this.hasMoreRecords = false}): _records = records;
   
 
  final  List<TrackerRecordEntity> _records;
@@ -215,41 +219,45 @@ class _TrackerCubitState implements TrackerCubitState {
 }
 
 @override@JsonKey() final  double balance;
+// Success/failure tracking
 @override final  bool? isBalanceSuccess;
 @override final  bool? isAddingRecordSuccess;
+// Loading states
 @override@JsonKey() final  bool isAddingRecord;
+@override@JsonKey() final  bool isLoadingRecords;
+@override@JsonKey() final  bool hasMoreRecords;
 
-/// Create a copy of TrackerCubitState
+/// Create a copy of TrackerState
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$TrackerCubitStateCopyWith<_TrackerCubitState> get copyWith => __$TrackerCubitStateCopyWithImpl<_TrackerCubitState>(this, _$identity);
+_$TrackerStateCopyWith<_TrackerState> get copyWith => __$TrackerStateCopyWithImpl<_TrackerState>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackerCubitState&&const DeepCollectionEquality().equals(other._records, _records)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isBalanceSuccess, isBalanceSuccess) || other.isBalanceSuccess == isBalanceSuccess)&&(identical(other.isAddingRecordSuccess, isAddingRecordSuccess) || other.isAddingRecordSuccess == isAddingRecordSuccess)&&(identical(other.isAddingRecord, isAddingRecord) || other.isAddingRecord == isAddingRecord));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackerState&&const DeepCollectionEquality().equals(other._records, _records)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isBalanceSuccess, isBalanceSuccess) || other.isBalanceSuccess == isBalanceSuccess)&&(identical(other.isAddingRecordSuccess, isAddingRecordSuccess) || other.isAddingRecordSuccess == isAddingRecordSuccess)&&(identical(other.isAddingRecord, isAddingRecord) || other.isAddingRecord == isAddingRecord)&&(identical(other.isLoadingRecords, isLoadingRecords) || other.isLoadingRecords == isLoadingRecords)&&(identical(other.hasMoreRecords, hasMoreRecords) || other.hasMoreRecords == hasMoreRecords));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_records),balance,isBalanceSuccess,isAddingRecordSuccess,isAddingRecord);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_records),balance,isBalanceSuccess,isAddingRecordSuccess,isAddingRecord,isLoadingRecords,hasMoreRecords);
 
 @override
 String toString() {
-  return 'TrackerCubitState(records: $records, balance: $balance, isBalanceSuccess: $isBalanceSuccess, isAddingRecordSuccess: $isAddingRecordSuccess, isAddingRecord: $isAddingRecord)';
+  return 'TrackerState(records: $records, balance: $balance, isBalanceSuccess: $isBalanceSuccess, isAddingRecordSuccess: $isAddingRecordSuccess, isAddingRecord: $isAddingRecord, isLoadingRecords: $isLoadingRecords, hasMoreRecords: $hasMoreRecords)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$TrackerCubitStateCopyWith<$Res> implements $TrackerCubitStateCopyWith<$Res> {
-  factory _$TrackerCubitStateCopyWith(_TrackerCubitState value, $Res Function(_TrackerCubitState) _then) = __$TrackerCubitStateCopyWithImpl;
+abstract mixin class _$TrackerStateCopyWith<$Res> implements $TrackerStateCopyWith<$Res> {
+  factory _$TrackerStateCopyWith(_TrackerState value, $Res Function(_TrackerState) _then) = __$TrackerStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<TrackerRecordEntity> records, double balance, bool? isBalanceSuccess, bool? isAddingRecordSuccess, bool isAddingRecord
+ List<TrackerRecordEntity> records, double balance, bool? isBalanceSuccess, bool? isAddingRecordSuccess, bool isAddingRecord, bool isLoadingRecords, bool hasMoreRecords
 });
 
 
@@ -257,22 +265,24 @@ $Res call({
 
 }
 /// @nodoc
-class __$TrackerCubitStateCopyWithImpl<$Res>
-    implements _$TrackerCubitStateCopyWith<$Res> {
-  __$TrackerCubitStateCopyWithImpl(this._self, this._then);
+class __$TrackerStateCopyWithImpl<$Res>
+    implements _$TrackerStateCopyWith<$Res> {
+  __$TrackerStateCopyWithImpl(this._self, this._then);
 
-  final _TrackerCubitState _self;
-  final $Res Function(_TrackerCubitState) _then;
+  final _TrackerState _self;
+  final $Res Function(_TrackerState) _then;
 
-/// Create a copy of TrackerCubitState
+/// Create a copy of TrackerState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? records = null,Object? balance = null,Object? isBalanceSuccess = freezed,Object? isAddingRecordSuccess = freezed,Object? isAddingRecord = null,}) {
-  return _then(_TrackerCubitState(
+@override @pragma('vm:prefer-inline') $Res call({Object? records = null,Object? balance = null,Object? isBalanceSuccess = freezed,Object? isAddingRecordSuccess = freezed,Object? isAddingRecord = null,Object? isLoadingRecords = null,Object? hasMoreRecords = null,}) {
+  return _then(_TrackerState(
 records: null == records ? _self._records : records // ignore: cast_nullable_to_non_nullable
 as List<TrackerRecordEntity>,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
 as double,isBalanceSuccess: freezed == isBalanceSuccess ? _self.isBalanceSuccess : isBalanceSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,isAddingRecordSuccess: freezed == isAddingRecordSuccess ? _self.isAddingRecordSuccess : isAddingRecordSuccess // ignore: cast_nullable_to_non_nullable
 as bool?,isAddingRecord: null == isAddingRecord ? _self.isAddingRecord : isAddingRecord // ignore: cast_nullable_to_non_nullable
+as bool,isLoadingRecords: null == isLoadingRecords ? _self.isLoadingRecords : isLoadingRecords // ignore: cast_nullable_to_non_nullable
+as bool,hasMoreRecords: null == hasMoreRecords ? _self.hasMoreRecords : hasMoreRecords // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

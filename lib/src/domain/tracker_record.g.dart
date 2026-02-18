@@ -41,5 +41,6 @@ const _$TrackerRecordCategoryEnumMap = {
   TrackerRecordCategory.entertainment: 'entertainment',
   TrackerRecordCategory.utilities: 'utilities',
   TrackerRecordCategory.other: 'other',
+  TrackerRecordCategory.income: 'income',
   TrackerRecordCategory.unknown: 'unknown',
 };

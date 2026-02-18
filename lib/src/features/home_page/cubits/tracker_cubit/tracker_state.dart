@@ -1,8 +1,8 @@
 part of 'tracker_cubit.dart';
 
 @freezed
-sealed class TrackerCubitState with _$TrackerCubitState {
-  const factory TrackerCubitState({
+sealed class TrackerState with _$TrackerState {
+  const factory TrackerState({
     @Default([]) List<TrackerRecordEntity> records,
     @Default(0) double balance,
 
@@ -12,5 +12,7 @@ sealed class TrackerCubitState with _$TrackerCubitState {
 
     // Loading states
     @Default(false) bool isAddingRecord,
-  }) = _TrackerCubitState;
+    @Default(false) bool isLoadingRecords,
+    @Default(false) bool hasMoreRecords,
+  }) = _TrackerState;
 }

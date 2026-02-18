@@ -7,15 +7,16 @@ import 'package:budget_tracker/src/utils/data_state/data_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tracker_cubit.freezed.dart';
-part 'tracker_cubit_state.dart';
+part 'tracker_state.dart';
 
-class TrackerCubitCubit extends SafeCubit<TrackerCubitState> {
+class TrackerCubit extends SafeCubit<TrackerState> {
   final TrackerRepository _trackerRepository;
   StreamSubscription<DataState<double>>? _balanceSubscription;
+  static const int _pageSize = 20;
 
-  TrackerCubitCubit(this._trackerRepository)
-    : super(const TrackerCubitState()) {
+  TrackerCubit(this._trackerRepository) : super(const TrackerState()) {
     watchBalance();
+    loadRecords();
   }
 
   void watchBalance() {
@@ -33,10 +34,16 @@ class TrackerCubitCubit extends SafeCubit<TrackerCubitState> {
     });
   }
 
-  Future<void> addExpense(double amount, String category, DateTime date) async {
+  Future<void> addExpense({
+    required double amount,
+    required String category,
+  }) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
-    final result = await _trackerRepository.addExpense(amount, category, date);
+    final result = await _trackerRepository.addExpense(
+      amount: amount,
+      category: category,
+    );
     result.handle(
       success: (record) {
         final currentRecords = List<TrackerRecordEntity>.from(state.records);
@@ -58,10 +65,11 @@ class TrackerCubitCubit extends SafeCubit<TrackerCubitState> {
     );
   }
 
-  Future<void> addIncome(double amount, String category, DateTime date) async {
+  Future<void> addIncome({required double amount}) async {
     // Reset the state before adding
     emit(state.copyWith(isAddingRecordSuccess: null, isAddingRecord: true));
-    final result = await _trackerRepository.addIncome(amount, category, date);
+    final result = await _trackerRepository.addIncome(amount: amount);
+    print('addIncome result: $result');
     result.handle(
       success: (record) {
         final currentRecords = List<TrackerRecordEntity>.from(state.records);
@@ -80,6 +88,37 @@ class TrackerCubitCubit extends SafeCubit<TrackerCubitState> {
         emit(
           state.copyWith(isAddingRecordSuccess: false, isAddingRecord: false),
         );
+      },
+    );
+  }
+
+  Future<void> loadRecords({bool loadMore = false}) async {
+    if (state.isLoadingRecords) return;
+
+    emit(state.copyWith(isLoadingRecords: true));
+
+    final offset = loadMore ? state.records.length : 0;
+    final result = await _trackerRepository.getRecords(
+      limit: _pageSize,
+      offset: offset,
+    );
+
+    result.handle(
+      success: (newRecords) {
+        final updatedRecords = loadMore
+            ? [...state.records, ...newRecords]
+            : newRecords;
+
+        emit(
+          state.copyWith(
+            records: updatedRecords,
+            isLoadingRecords: false,
+            hasMoreRecords: newRecords.length == _pageSize,
+          ),
+        );
+      },
+      failure: (failure) {
+        emit(state.copyWith(isLoadingRecords: false));
       },
     );
   }
