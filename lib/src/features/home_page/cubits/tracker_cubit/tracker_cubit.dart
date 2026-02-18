@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:budget_tracker/src/data/tracker_repository.dart';
-import 'package:budget_tracker/src/domain/tracker_record.dart';
+import 'package:budget_tracker/src/domain/tracker_record_entity.dart';
 import 'package:budget_tracker/src/enums/tracker_record_category.dart';
 import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:budget_tracker/src/utils/cubit/safe_cubit.dart';

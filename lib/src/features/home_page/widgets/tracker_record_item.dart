@@ -1,5 +1,5 @@
 import 'package:budget_tracker/generated/locale_keys.g.dart';
-import 'package:budget_tracker/src/domain/tracker_record.dart';
+import 'package:budget_tracker/src/domain/tracker_record_entity.dart';
 import 'package:budget_tracker/src/enums/tracker_record_type.dart';
 import 'package:budget_tracker/src/utils/ui/dimensions.dart';
 import 'package:easy_localization/easy_localization.dart';
